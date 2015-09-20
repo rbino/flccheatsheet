@@ -1,0 +1,544 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language italian
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language swedish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+No Bullshit FLC
+\end_layout
+
+\begin_layout Section
+Regular Expressions and Finite Automata
+\end_layout
+
+\begin_layout Subsection
+Berry-Sethi
+\end_layout
+
+\begin_layout Enumerate
+Numerare i caratteri della grammatica e aggiungere il terminatore (
+\begin_inset Formula $\dashv$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Enumerate
+Calcolare il set 
+\begin_inset Formula $Ini$
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Tutti i simboli con cui la stringa può iniziare
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Calcolare la look-up table per ogni carattere
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Per ogni simbolo, ricavare i followers, ovvero tutti i caratteri che lo
+ possono seguire
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Disegno l'automa
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Il primo stato ha come nome il set 
+\begin_inset Formula $Ini$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Per ogni carattere nel nome dello stato, si guardano i followers e per ogni
+ carattere (escludendo il pedice) si fa un arco in uscita che accetta quel
+ carattere e finisce in uno stato con il nome dei followers di quel carattere
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Se ci sono due caratteri uguali ma con pedice diverso (i.e.
+ 
+\begin_inset Formula $a_{1}$
+\end_inset
+
+ e 
+\begin_inset Formula $a_{2}$
+\end_inset
+
+) lo stato di arrivo è l'unione dei followers
+\end_layout
+
+\begin_layout Enumerate
+Se ci si accorge che il nome dello stato risultante è uguale ad uno stato
+ già esistente si riutilizza quello stato
+\end_layout
+
+\begin_layout Enumerate
+Se tra i follower c'è anche il terminatore (
+\begin_inset Formula $\dashv$
+\end_inset
+
+), lo stato viene segnato come terminale
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Subsection
+Minimizzazione
+\end_layout
+
+\begin_layout Enumerate
+Fare una matrice con righe e colonne con i nomi degli stati, rinominati
+ con nomi umani (il triangolo superiore è inutile dato che è simmetrica)
+\end_layout
+
+\begin_layout Enumerate
+Al primo step, segnare gli stati sicuramente distinguibili tra loro, ovvero
+ le coppie finale-non finale
+\end_layout
+
+\begin_layout Enumerate
+Per gli stati rimasti, per ogni carattere sugli archi d'uscita, segnare
+ le coppie degli stati d'arrivo
+\end_layout
+
+\begin_layout Enumerate
+Se una coppia contiene due stati distinguibili, marcare la casella come
+ distinguibile
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Stati di errore: TODO
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Gli stati rimasti alla fine non marcati come distinguibili sono indistinguibili
+\end_layout
+
+\begin_layout Enumerate
+Ricostruire l'automa fondendo gli stati indistinguibili
+\end_layout
+
+\begin_layout Subsection
+BMC (Brzozowski) (da FSA a Regex)
+\end_layout
+
+\begin_layout Enumerate
+Aggiungere all'FSA uno stato iniziale senza archi entranti e uno stato finale
+ senza archi uscenti, che rispettivamente con delle 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+-mosse vanno agli stati iniziali e ricevono gli stati finali
+\end_layout
+
+\begin_layout Enumerate
+Eliminare un nodo intermedio alla volta fondendo gli archi entranti e uscenti
+ con opportune Regex
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Remember: autoanelli = *
+\end_layout
+
+\begin_layout Enumerate
+Se ci sono più alternative mettere |
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Continuare fino a quando non rimangono solo stato iniziale e finale.
+ La Regex sull'arco che li unisce è la Regex equivalente all'FSA
+\end_layout
+
+\begin_layout Subsection
+Intersezione tra linguaggi (FSA) - metodo veloce
+\end_layout
+
+\begin_layout Enumerate
+Prendo i due FSA e rinomino opportunamente gli stati in modo da usare due
+ set di caratteri distinti (e.g.
+ alfabeto greco e lettere)
+\end_layout
+
+\begin_layout Enumerate
+Prendo gli stati iniziali dei due FSA e li unisco in un unico stato (e.g.
+ 1
+\begin_inset Formula $\alpha$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Enumerate
+Prendo gli archi uscenti comuni (ovvero, le lettere che vengono accettate
+ da tutti e due i nodi) e creo un arco che accetta la lettera accettata
+ da entrambi e finisce in uno stato 
+\begin_inset Quotes sld
+\end_inset
+
+fusione
+\begin_inset Quotes srd
+\end_inset
+
+ tra gli stati d'arrivo (e.g.
+ se da 1 accetto c finendo nello stato 2 e da 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ accetto c finendo nello stato 
+\begin_inset Formula $\gamma$
+\end_inset
+
+, avrò un arco che da 1
+\begin_inset Formula $\alpha$
+\end_inset
+
+ finisce in 2
+\begin_inset Formula $\gamma$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Enumerate
+Ripeto l'operazione per tutti i nodi creati fino a quando posso fare qualcosa
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Se un nodo che creo non è finale e non ha archi uscenti in comune, è uno
+ stato pozzo quindi posso buttarlo
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Uno stato è finale solo se entrambi gli stati sono finali
+\end_layout
+
+\begin_layout Subsection
+Intersezione tra linguaggi (FSA) - prodotto cartesiano
+\end_layout
+
+\begin_layout Enumerate
+Dispongo i due FSA 
+\begin_inset Quotes sld
+\end_inset
+
+a matrice
+\begin_inset Quotes srd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Riempio la matrice con il prodotto cartesiano di tutti gli stati
+\end_layout
+
+\begin_layout Enumerate
+Vedi metodo veloce per gli archi
+\end_layout
+
+\begin_layout Subsection
+Creare una grammatica da un FSA
+\end_layout
+
+\begin_layout Enumerate
+Chiamo gli stati dell'FSA con lettere maiuscole (non-terminali)
+\end_layout
+
+\begin_layout Enumerate
+Seguo l'FSA creando per ogni stato una regola: 
+\begin_inset Formula $A\rightarrow aB$
+\end_inset
+
+ dove 
+\begin_inset Formula $A$
+\end_inset
+
+ è lo stato, 
+\begin_inset Formula $a$
+\end_inset
+
+ è il carattere sull'arco e 
+\begin_inset Formula $B$
+\end_inset
+
+ è lo stato su cui finisce l'arco.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Se ci sono più archi in uscita, mettere le regole in or (|)
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Invertire un FSA
+\end_layout
+
+\begin_layout Enumerate
+Completo l'FSA con gli stati di errore nel caso manchino archi uscenti in
+ qualche stato
+\end_layout
+
+\begin_layout Enumerate
+Gli stati finali diventano non finali e viceversa
+\end_layout
+
+\begin_layout Subsection
+Linguaggi locali
+\end_layout
+
+\begin_layout Enumerate
+Per controllare se un linguaggio è local o locally testable prima di tutto
+ controlliamo se vale la condizione sufficiente, cioè: ogni stato deve avere
+ una sola lettera in ingresso per tutti gli archi e non ci devono essere
+ due stati che hanno la stessa lettera in ingresso.
+ Se questa è valida, allora è locale.
+ Altrimenti bisogna verificare ulteriormente: creo il set 
+\begin_inset Formula $Ini$
+\end_inset
+
+ in cui metto i caratteri con cui può iniziare il linguaggio e il set 
+\begin_inset Formula $Fin$
+\end_inset
+
+ dei caratteri con cui può finire il linguaggio.
+ Poi creo il set 
+\begin_inset Formula $Dig$
+\end_inset
+
+ che include tutti i possibili digrammi (e.g.
+ coppie di caratteri) generabili a partire da qualsiasi stato dell'FSA.
+ Il linguaggio è locale se, e solo se, l'FSA accetta qualsiasi stringa che
+ può essere generata concatenando un carattere di 
+\begin_inset Formula $Ini$
+\end_inset
+
+, un numero arbitrario di digrammi presi da 
+\begin_inset Formula $Dig$
+\end_inset
+
+ e un carattere di 
+\begin_inset Formula $Fin$
+\end_inset
+
+ (TODO)
+\end_layout
+
+\begin_layout Subsection
+Eliminare 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+-mosse (Cut spontaneous transitions)
+\end_layout
+
+\begin_layout Enumerate
+Elimino un arco con un'epsilon mossa
+\end_layout
+
+\begin_layout Enumerate
+Copio gli archi uscenti dal nodo di arrivo sul nodo di partenza della 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+-mossa
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Occhio se ce n'è più di una in fila, vanno considerate tutte
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Linear language equations
+\end_layout
+
+\begin_layout Enumerate
+Scrivere le regole come se fossero un sistema di equazioni
+\end_layout
+
+\begin_layout Enumerate
+Risolvere il sistema
+\end_layout
+
+\begin_layout Enumerate
+Usare la Arden identity: 
+\begin_inset Formula $L_{A}=L_{x}|L_{y}L_{A}$
+\end_inset
+
+ diventa 
+\begin_inset Formula $L_{A}=L_{y}^{*}L_{x}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Free Grammars and Pushdown Automata
+\end_layout
+
+\begin_layout Subsection
+Grammatiche note
+\end_layout
+
+\begin_layout Subsubsection
+Dyck Language
+\end_layout
+
+\begin_layout Standard
+Riconosce le parentesi bilanciate (e.g.
+ (()())() )
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+S\rightarrow(S)S|\epsilon
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Palindromi
+\end_layout
+
+\begin_layout Standard
+Con centro (e.g.
+ aabcbaa)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+S\rightarrow aSa|bSb|c
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Senza centro (e.g.
+ aabbaa)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+S\rightarrow aSa|bSb|\epsilon
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Varie traduzioni di Regex
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray*}
+a^{*} & = & S\rightarrow aS|\epsilon\\
+a^{+} & = & S\rightarrow aS|a
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
