@@ -540,5 +540,365 @@ a^{+} & = & S\rightarrow aS|a
 
 \end_layout
 
+\begin_layout Subsection
+EBNF
+\end_layout
+
+\begin_layout Subsubsection
+Sintassi
+\end_layout
+
+\begin_layout Standard
+Le regole EBNF hanno una sintassi del tipo
+\end_layout
+
+\begin_layout Standard
+<EXPR>
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+<NUM> (<OP> <NUM>)*
+\end_layout
+
+\begin_layout Standard
+Elementi opzionali con le quadre
+\end_layout
+
+\begin_layout Standard
+<EXPR>
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+[<LPAREN>]<PIPPO>[<RPAREN>]
+\end_layout
+
+\begin_layout Standard
+Soliti operatori (*, +, |) più numeri come apice per il numero di ripetizioni.
+\end_layout
+
+\begin_layout Standard
+I caratteri singoli vanno inseriti tra apici.
+\end_layout
+
+\begin_layout Standard
+I set di caratteri possono essere indicati con la notazione (a...z) etc.
+\end_layout
+
+\begin_layout Subsubsection
+Svolgimento
+\end_layout
+
+\begin_layout Standard
+Di solito viene descritto un qualche tipo di linguaggio buffo, conviene
+ partire dalla parte finale del testo (di solito dice 
+\begin_inset Quotes sld
+\end_inset
+
+Un programma è una lista di blabla
+\begin_inset Quotes srd
+\end_inset
+
+), a questo punto si definisce il programma (o quello che è) come lista
+ dei blabla e si scende definendo i blabla fin quando si arriva ai terminali.
+\end_layout
+
+\begin_layout Section
+Syntax Analysis and Parsing Methodologies
+\end_layout
+
+\begin_layout Subsection
+ELR(1)
+\end_layout
+
+\begin_layout Subsubsection
+Costruire l'automa pilota
+\end_layout
+
+\begin_layout Enumerate
+Ogni stato dell'automa pilota è diviso in due parti: sotto si inseriscono
+ le computazioni che iniziano a quello stato, sopra si seguono quelle in
+ corso
+\end_layout
+
+\begin_layout Enumerate
+Si inseriscono nel primo macrostato dell'automa pilota tutti gli stati raggiungi
+bili con 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+-mossa dallo stato iniziale dell'FSA, esso compreso
+\end_layout
+
+\begin_layout Enumerate
+Le produzioni che iniziano a quello stato vengono inserite insieme al loro
+ lookahead nella seconda metà dello stato dell'automa pilota.
+ Il lookahead è composto dall'insieme dei caratteri (
+\begin_inset Formula $\dashv$
+\end_inset
+
+ compreso) che possono essere ricevuti al termine della produzione
+\end_layout
+
+\begin_layout Enumerate
+Per ogni carattere che può essere ricevuto dagli stati compresi nel macrostato
+ corrente, calcola il macrostato successivo composto da tutti gli stati
+ raggiungibili col carattere dato partendo dagli stati del macrostato precedente
+ (il lookahead non cambia) e le eventuali nuovi produzioni che iniziano
+ in questo macrostato.
+ Collegare i due macrostati con un arco con etichetta del carattere accettato.
+ Nel caso più di uno stato produca la stessa transizione (stesso carattere,
+ stesso stato di arrivo), aggiungere più frecce per controllare convergence
+ conflicts
+\end_layout
+
+\begin_layout Enumerate
+Gli stati che terminano produzioni vengono cerchiati
+\end_layout
+
+\begin_layout Enumerate
+(Riciclare gli stati se ne escono di uguali a qualcuno che abbiamo già)
+\end_layout
+
+\begin_layout Enumerate
+Una volta finiti tutti i macrostati, controllare eventuali presenze di conflitti
+\end_layout
+
+\begin_layout Subsubsection
+Conflitti
+\end_layout
+
+\begin_layout Itemize
+Convergence conflict: se ci sono più frecce con lo stesso carattere tra
+ una coppia di stati
+\end_layout
+
+\begin_layout Itemize
+Reduce-reduce conflict: se abbiamo nel macrostato più di uno stato finale
+ con caratteri condivisi nel lookahead
+\end_layout
+
+\begin_layout Itemize
+Shift-reduce conflict: se abbiamo un macrostato con uno stato finale e una
+ freccia uscente con un carattere nel lookahead del suddetto stato
+\end_layout
+
+\begin_layout Standard
+Se ci sono conflitti, l'automa 
+\series bold
+NON 
+\series default
+è ELR(1)
+\end_layout
+
+\begin_layout Subsubsection
+Tabellozzo
+\end_layout
+
+\begin_layout Enumerate
+Si parte dallo stato iniziale e lo si mette nello stack.
+ In input si mette la stringa da leggere (con 
+\begin_inset Formula $\dashv$
+\end_inset
+
+ alla fine)
+\end_layout
+
+\begin_layout Enumerate
+Si legge il primo carattere della stringa.
+ In 
+\begin_inset Quotes sld
+\end_inset
+
+move executed
+\begin_inset Quotes srd
+\end_inset
+
+ si segna 
+\begin_inset Quotes sld
+\end_inset
+
+shifted $c
+\begin_inset Quotes srd
+\end_inset
+
+.
+ Sullo stack si segna il carattere letto e lo stato in cui si arriva.
+\end_layout
+
+\begin_layout Enumerate
+Si continua fin quando non si arriva allo stato finale di una produzione.
+ Quando succede, si poppa dallo stack fin quando si torna allo stato in
+ cui è iniziata (controllare sia che sia lo stato iniziale che il lookahead
+ che dev'essere lo stesso).
+ Quando si fa questa operazione si segne in 
+\begin_inset Quotes sld
+\end_inset
+
+move executed
+\begin_inset Quotes srd
+\end_inset
+
+ 
+\begin_inset Quotes sld
+\end_inset
+
+reduced $sarcazzo
+\begin_inset Quotes srd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Dopo una reduce, è come se 
+\begin_inset Quotes sld
+\end_inset
+
+leggessimo
+\begin_inset Quotes srd
+\end_inset
+
+ il non-terminale che abbiamo ridotto, quindi facciamo la shift sul non-terminal
+e
+\end_layout
+
+\begin_layout Enumerate
+Continuare fino alla fine della stringa
+\end_layout
+
+\begin_layout Enumerate
+Se alla fine abbiamo nello stack solo lo stato iniziale, in input solo il
+ terminatore e svolgiamo una reduce dell'assioma, allora la stringa viene
+ riconosciuta
+\end_layout
+
+\begin_layout Subsection
+ELL(n)
+\end_layout
+
+\begin_layout Subsubsection
+Verifica su FSA
+\end_layout
+
+\begin_layout Enumerate
+Per ogni nodo che ha un arco uscente che riconosce un non-terminale, si
+ traccia un arco tratteggiato che unisce quel nodo al nodo iniziale della
+ macchina che riconosce il non-terminale
+\end_layout
+
+\begin_layout Enumerate
+Per ogni arco , si computa il guide set, che è l'insieme degli n-grammi
+ che è possibile ricevere partendo dallo stato di partenza dell'arco (se
+ è tratteggiato, dallo stato di arrivo), incluso il terminatore
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+In caso di ELL(1) basta farlo per ogni arco tratteggiato e finale (i guide
+ sets degli altri archi sono semplicemente le etichette)
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Se i guide set degli archi uscenti da un nodo sono non disgiunti, il linguaggio
+ non è ELL(n)
+\end_layout
+
+\begin_layout Subsubsection
+Tabellozzo
+\end_layout
+
+\begin_layout Enumerate
+Si parte dallo stato iniziale della macchina assiomatica (S), che si mette
+ nello stack.
+ In input di mette la stringa.
+\end_layout
+
+\begin_layout Enumerate
+Ad ogni azione si cambia lo stato sullo stack
+\end_layout
+
+\begin_layout Enumerate
+Se si legge un terminale, l'azione è 
+\begin_inset Quotes sld
+\end_inset
+
+scanned a
+\begin_inset Quotes srd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Se si legge un non-terminale, l'azione è 
+\begin_inset Quotes sld
+\end_inset
+
+Call X
+\begin_inset Quotes srd
+\end_inset
+
+ e viene pushato sullo stack lo stato iniziale del non-terminale
+\end_layout
+
+\begin_layout Enumerate
+Al passo successivo di quando si arriva ad uno stato finale di un non-terminale,
+ si mette un'azione 
+\begin_inset Quotes sld
+\end_inset
+
+returned from X
+\begin_inset Quotes srd
+\end_inset
+
+ e si poppa lo stato finale
+\end_layout
+
+\begin_layout Enumerate
+Se alla fine ci si trova nello stato finale dell'assioma e l'input è solo
+ il terminatore, la stringa viene accettata
+\end_layout
+
+\begin_layout Subsection
+Earley
+\end_layout
+
+\begin_layout Standard
+È simile a ELR solo che si seguono tutte le produzioni in parallelo (ed
+ è fatto su una stringa data)
+\end_layout
+
+\begin_layout Enumerate
+Si lavora sull'FSA
+\end_layout
+
+\begin_layout Enumerate
+Nel primo stato si segnano le produzioni che possono iniziare nel primo
+ stato dell'FSA.
+ Se un non-terminale è nullable (lo stato iniziale è anche finale), bisogna
+ considerare subito la sua riduzione.
+ Sulla seconda colonna si segna il macrostato a cui è iniziata la produzione
+\end_layout
+
+\begin_layout Enumerate
+Si legge il primo carattere e si seguono solo le produzioni che lo accettano.
+ Si segna lo stato di arrivo (che continuerà ad avere inizio 0) ed eventuali
+ nuove produzioni che cominciano (con inizio 1)
+\end_layout
+
+\begin_layout Enumerate
+Si continua fino alla fine della stringa.
+ Quando una produzione secondaria raggiunge lo stato finale, nello stesso
+ macrostato bisogna aggiungere lo stato successivo del suo genitore (con
+ inizio del genitore)
+\end_layout
+
+\begin_layout Enumerate
+Se si arriva alla fine della stringa con uno stato finale della macchina
+ assiomatica (S) che ha inizio 0, la stringa viene riconosciuta, altrimenti
+ no
+\end_layout
+
 \end_body
 \end_document
