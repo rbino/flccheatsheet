@@ -188,7 +188,9 @@ Se una coppia contiene due stati distinguibili, marcare la casella come
 
 \begin_deeper
 \begin_layout Enumerate
-Stati di errore: TODO
+Stati di errore: se finiscono nello stato d'errore con la stessa variabile
+ oppure uno finisce nello stato d'errore e l'altro ha un autoanello, sono
+ non-distinguibili
 \end_layout
 
 \end_deeper
@@ -395,19 +397,20 @@ Per controllare se un linguaggio è local o locally testable prima di tutto
  che include tutti i possibili digrammi (e.g.
  coppie di caratteri) generabili a partire da qualsiasi stato dell'FSA.
  Il linguaggio è locale se, e solo se, l'FSA accetta qualsiasi stringa che
- può essere generata concatenando un carattere di 
-\begin_inset Formula $Ini$
-\end_inset
-
-, un numero arbitrario di digrammi presi da 
+ può essere generata concatenando un numero arbitrario di digrammi presi
+ da 
 \begin_inset Formula $Dig$
 \end_inset
 
- e un carattere di 
+ purché la stringa inizi con un carattere di 
+\begin_inset Formula $Ini$
+\end_inset
+
+ e termini con un carattere di 
 \begin_inset Formula $Fin$
 \end_inset
 
- (TODO)
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -460,6 +463,21 @@ Usare la Arden identity:
 
 \end_layout
 
+\begin_deeper
+\begin_layout Enumerate
+Promemoria: per usare la Arden identity bisogna prima raccogliere tutte
+ le 
+\begin_inset Formula $L_{A}$
+\end_inset
+
+: 
+\begin_inset Formula $aL_{A}\cup bL_{A}=\{a,b\}L_{A}$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Section
 Free Grammars and Pushdown Automata
 \end_layout
@@ -898,6 +916,190 @@ Si continua fino alla fine della stringa.
 Se si arriva alla fine della stringa con uno stato finale della macchina
  assiomatica (S) che ha inizio 0, la stringa viene riconosciuta, altrimenti
  no
+\end_layout
+
+\begin_layout Section
+Language Translation and Semantic Analysis
+\end_layout
+
+\begin_layout Subsection
+Traduzione di linguaggi
+\end_layout
+
+\begin_layout Enumerate
+Per ogni regola di riconoscimento del linguaggio sorgente, scrivere la regola
+ del linguaggio destinazione
+\end_layout
+
+\begin_layout Enumerate
+Attenzione: bisogna tenere 
+\series bold
+tutte
+\series default
+ le regole del linguaggio sorgente
+\end_layout
+
+\begin_layout Enumerate
+Potrebbe chiedere di modificare anche il linguaggio sorgente
+\end_layout
+
+\begin_layout Subsection
+Grammatiche con attributi
+\end_layout
+
+\begin_layout Standard
+Servono per 
+\begin_inset Quotes sld
+\end_inset
+
+fare cose
+\begin_inset Quotes srd
+\end_inset
+
+ durante il parsing usando attributi (aka, delle variabili) che vengono
+ modificati durante l'esecuzione delle regole della grammatica.
+ Gli attributi possono essere di tipo left, ovvero che vengono propagati
+ dalle foglie verso la radice, oppure right, ovvero che vengono propagati
+ dalla radice verso le foglie.
+\end_layout
+
+\begin_layout Enumerate
+Per ogni regola, definire quali operazioni vengono eseguite.
+ Conviene guardare l'albero e capire da quello se conviene definire gli
+ attributi come right o left (non per forza tutti uguali)
+\end_layout
+
+\begin_layout Enumerate
+Nella tabella degli attributi bisogna scrivere tipo (left o right), significato
+ (cosa mi significa quell'attributo), non-terminali (quelli in cui il valore
+ viene usato) e il dominio (il tipo della variabile)
+\end_layout
+
+\begin_layout Enumerate
+Per ogni regola, indicare come viene assegnata l'attributo.
+ Utilizzare i pedici delle lettere per stabilire a chi appartiene l'attributo
+ che si sta usando
+\end_layout
+
+\begin_layout Enumerate
+Quando si sono scritte tutte le regole, decorare l'albero (prendere le regole
+ e fare i conti sull'albero)
+\end_layout
+
+\begin_layout Subsubsection
+One-sweep e L-condition
+\end_layout
+
+\begin_layout Enumerate
+Tracciare delle frecce per indicare le dipendenze tra i vari attributi sull'albe
+ro decorato
+\end_layout
+
+\begin_layout Enumerate
+La grammatica è one-sweep se e solo se:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Non ci sono cicli nel grafo delle dipendenze
+\end_layout
+
+\begin_layout Enumerate
+In un nodo non ci devono essere attributi left che dipendono da attributi
+ right associati allo stesso non-terminale destro
+\end_layout
+
+\begin_layout Enumerate
+Nel grafo non ci devono essere dipendenze tra un attributo sinistra associato
+ ad un non-terminale sinistro e un destro di un non-terminale destro
+\end_layout
+
+\begin_layout Enumerate
+Il grafo dei figli dello stesso nodo non deve avere loop
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+La grammatica soddisfa la L-condition se e solo se:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+È one-sweep
+\end_layout
+
+\begin_layout Enumerate
+Il grafo dei figli dello stesso non ha archi tra attributi di nodi più a
+ destra e nodi più a sinistra
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Dataflow Analysis
+\end_layout
+
+\begin_layout Subsubsection
+Liveness analysis
+\end_layout
+
+\begin_layout Enumerate
+Riempire la tabella di def e use con le variabili
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Va in def: se è a sinistra dell'uguale in un assegnamento oppure è un argomento
+ di una read
+\end_layout
+
+\begin_layout Enumerate
+Va in use: se è a destra dell'uguale in un assegnamento, è un argomento
+ di una write oppure viene usata per confronti
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Impostare le equazioni di In e Out dei nodi
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Formula $In(n)=\{use(n)\}\cup\{out(n)\backslash def(n)\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $Out(n)=\cup\{In(succ(n))\}$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Per risolvere iterativamente, partire dalle equazioni di Out mettendo tutti
+ gli insiemi vuoti, l'equazione di In avrà come risultato l'insieme use.
+ Da qui in poi risolvere alternatamente le equazioni Out e In usando i risultati
+ del passo precedente.
+ Continuare fin quando si giunge ad un punto fisso (e.g.
+ due iterazioni successive danno insiemi uguali).
+\end_layout
+
+\begin_layout Subsubsection
+Reaching definitions
+\end_layout
+
+\begin_layout Standard
+Per ogni stato richiesto, si controlla per ogni variabile da quali stati
+ possono arrivare le definizioni che lo raggiungono.
+ Praticamente, si percorre il grafo all'indietro fino a raggiungere ogni
+ possibile definizione che non viene soppressa da una successiva.
+\end_layout
+
+\begin_layout Standard
+
 \end_layout
 
 \end_body
