@@ -45,7 +45,7 @@
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
-\suppress_date false
+\suppress_date true
 \justification true
 \use_refstyle 1
 \index Index
@@ -70,7 +70,9 @@
 \begin_body
 
 \begin_layout Title
-No Bullshit FLC
+FLC Cheatsheet
+\end_layout
+
 \end_layout
 
 \begin_layout Section
