@@ -26,7 +26,16 @@
 \index_command default
 \paperfontsize default
 \spacing single
-\use_hyperref false
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder true
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
 \papersize default
 \use_geometry false
 \use_package amsmath 1
@@ -71,6 +80,43 @@
 
 \begin_layout Title
 FLC Cheatsheet
+\end_layout
+
+\begin_layout Author
+rbino, Lapo, ray
+\end_layout
+
+\begin_layout Section*
+Disclaimer
+\end_layout
+
+\begin_layout Standard
+Gli autori non si assumono nessuna responsabilità per quanto riguarda la
+ correttezza di tutto ciò che segue, questo documento è stato creato nei
+ pomeriggi di studio matto e disperatissimo e non ambiva ad essere diffuso
+ al mondo intero.
+ Se avete correzioni, aggiunte, consigli aprite una issue o mandate una
+ pull request sul repo Git
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/rbino/flccheatsheet
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \end_layout
