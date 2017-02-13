@@ -1,24 +1,26 @@
-#LyX 2.1 created this file. For more info see http://www.lyx.org/
-\lyxformat 474
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
 \begin_document
 \begin_header
+\save_transient_properties true
+\origin unavailable
 \textclass article
 \use_default_options true
 \maintain_unincluded_children false
-\language italian
+\language british
 \language_package default
 \inputencoding auto
 \fontencoding global
-\font_roman default
-\font_sans default
-\font_typewriter default
-\font_math auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
-\font_sf_scale 100
-\font_tt_scale 100
+\font_sf_scale 100 100
+\font_tt_scale 100 100
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -61,14 +63,14 @@
 \shortcut idx
 \color #008000
 \end_index
-\leftmargin 2.54cm
+\leftmargin 2cm
 \topmargin 3cm
-\rightmargin 2.54cm
+\rightmargin 2cm
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
 \paragraph_indentation default
-\quotes_language swedish
+\quotes_language english
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
@@ -153,6 +155,10 @@ Calcolare il set
 \end_inset
 
 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -163,6 +169,10 @@ Tutti i simboli con cui la stringa può iniziare
 \end_deeper
 \begin_layout Enumerate
 Calcolare la look-up table per ogni carattere
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -174,6 +184,10 @@ Per ogni simbolo, ricavare i followers, ovvero tutti i caratteri che lo
 \end_deeper
 \begin_layout Enumerate
 Disegno l'automa
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -189,6 +203,10 @@ Il primo stato ha come nome il set
 Per ogni carattere nel nome dello stato, si guardano i followers e per ogni
  carattere (escludendo il pedice) si fa un arco in uscita che accetta quel
  carattere e finisce in uno stato con il nome dei followers di quel carattere
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -242,6 +260,10 @@ Per gli stati rimasti, per ogni carattere sugli archi d'uscita, segnare
 \begin_layout Enumerate
 Se una coppia contiene due stati distinguibili, marcare la casella come
  distinguibile
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -276,6 +298,10 @@ Aggiungere all'FSA uno stato iniziale senza archi entranti e uno stato finale
 \begin_layout Enumerate
 Eliminare un nodo intermedio alla volta fondendo gli archi entranti e uscenti
  con opportune Regex
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -345,6 +371,10 @@ fusione
 
 \begin_layout Enumerate
 Ripeto l'operazione per tutti i nodi creati fino a quando posso fare qualcosa
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -408,6 +438,10 @@ Seguo l'FSA creando per ogni stato una regola:
 \end_inset
 
  è lo stato su cui finisce l'arco.
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -489,6 +523,10 @@ Copio gli archi uscenti dal nodo di arrivo sul nodo di partenza della
 \end_inset
 
 -mossa
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -516,6 +554,10 @@ Usare la Arden identity:
 
  diventa 
 \begin_inset Formula $L_{A}=L_{y}^{*}L_{x}$
+\end_inset
+
+
+\begin_inset Separator latexpar
 \end_inset
 
 
@@ -866,6 +908,10 @@ Per ogni nodo che ha un arco uscente che riconosce un non-terminale, si
 Per ogni arco , si computa il guide set, che è l'insieme degli n-grammi
  che è possibile ricevere partendo dallo stato di partenza dell'arco (se
  è tratteggiato, dallo stato di arrivo), incluso il terminatore
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -1045,16 +1091,36 @@ Quando si sono scritte tutte le regole, decorare l'albero (prendere le regole
 \end_layout
 
 \begin_layout Subsubsection
+Dependency Graph
+\end_layout
+
+\begin_layout Standard
+Per disegnare il Dependency Graph bisogna:
+\end_layout
+
+\begin_layout Enumerate
+Scrivere per ogni nodo gli attributi left a sinistra e gli attributi right
+ a destra
+\end_layout
+
+\begin_layout Enumerate
+Tracciare un arco da ogni argomento al suo risultato (ex 
+\begin_inset Formula $a=b+c$
+\end_inset
+
+ tracciare un arco da b ad a e da c ad a)
+\end_layout
+
+\begin_layout Subsubsection
 One-sweep e L-condition
 \end_layout
 
 \begin_layout Enumerate
-Tracciare delle frecce per indicare le dipendenze tra i vari attributi sull'albe
-ro decorato
-\end_layout
-
-\begin_layout Enumerate
 La grammatica è one-sweep se e solo se:
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -1063,13 +1129,28 @@ Non ci sono cicli nel grafo delle dipendenze
 \end_layout
 
 \begin_layout Enumerate
-In un nodo non ci devono essere attributi left che dipendono da attributi
- right associati allo stesso non-terminale destro
+Non esiste nessun percorso tra un attributo left e un attributo right associati
+ allo stesso nodo 
+\begin_inset Formula $D_{i}$
+\end_inset
+
+ con 
+\begin_inset Formula $i\neq0$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Enumerate
-Nel grafo non ci devono essere dipendenze tra un attributo sinistra associato
- ad un non-terminale sinistro e un destro di un non-terminale destro
+Il grafo non contiene nessun arco da un attributo left del nodo padre 
+\begin_inset Formula $D_{0}$
+\end_inset
+
+ a un qualunque attributo right dei nodi figli 
+\begin_inset Formula $D_{i}$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Enumerate
@@ -1079,6 +1160,10 @@ Il grafo dei figli dello stesso nodo non deve avere loop
 \end_deeper
 \begin_layout Enumerate
 La grammatica soddisfa la L-condition se e solo se:
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -1087,8 +1172,15 @@ La grammatica soddisfa la L-condition se e solo se:
 \end_layout
 
 \begin_layout Enumerate
-Il grafo dei figli dello stesso non ha archi tra attributi di nodi più a
- destra e nodi più a sinistra
+Il grafo dei figli dello stesso nodo non ha archi 
+\begin_inset Formula $D_{j}\rightarrow D_{i}$
+\end_inset
+
+ con 
+\begin_inset Formula $j>i$
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -1102,6 +1194,10 @@ Liveness analysis
 
 \begin_layout Enumerate
 Riempire la tabella di def e use con le variabili
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -1118,6 +1214,10 @@ Va in use: se è a destra dell'uguale in un assegnamento, è un argomento
 \end_deeper
 \begin_layout Enumerate
 Impostare le equazioni di In e Out dei nodi
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
